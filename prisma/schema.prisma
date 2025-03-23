@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Status {
+  AVAILABLE
+  PENDING
+  CONFIRMED
+  RESERVED
+
+}
+
+enum MatchStatus {
+  PENDING
+  LINEUPS
+  INPROGRESS
+  FULLTIME
+  CANCELLED
+
+}
+enum BookingType {
+  ONLINE
+  OFFLINE
+}
+
+model User {
+  id      Int      @id @default(autoincrement())
+  email   String   
+  password String
+  name    String?
+  role    Role     @default(USER)
+  bookings Booking[]
+  matchmaking Matchmaking[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}
+
+model Court{
+  id Int @default(autoincrement()) @unique
+  name String
+  location String
+  pricePerHour Float
+  bookings Booking[]
+  matchmaking Matchmaking[]
+  completedMatchmaking CompletedMatchmaking[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+model Booking {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  courtId   Int
+  date      DateTime
+  startTime DateTime
+  endTime   DateTime
+  status    Status   @default(AVAILABLE)
+  bookingType BookingType @default(ONLINE)
+  user      User     @relation(fields: [userId], references: [id])
+  court     Court    @relation(fields: [courtId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Matchmaking {
+  id Int @id @default(autoincrement())
+  userId Int
+  courtId Int
+  bookingTime DateTime
+  matchCreatorId Int
+  playerCount Int
+  completeMatchmaking CompletedMatchmaking[]
+  matchmakingStatus MatchStatus @default(PENDING)
+
+  court Court @relation(fields: [courtId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  
+}
+
+model CompletedMatchmaking {
+  id Int @id @default(autoincrement())
+  courtId Int
+  matchId Int
+  matchDate DateTime
+  court Court @relation(fields: [courtId], references: [id])
+  match Matchmaking @relation(fields: [matchId], references: [id])
+
+
+  
+}
+
