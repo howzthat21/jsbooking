@@ -3,6 +3,7 @@ import { PORT } from './secrets'
 import rootRouter from './routes'
 import { PrismaClient } from '@prisma/client';
 import { registerSchema } from './schema/authSchema';
+import { errorMiddleware } from './middlewares/advanceError';
 
 
 
@@ -19,7 +20,7 @@ const app:Express = express();
 
 app.use(express.json())
 app.use('/', rootRouter)
-
+app.use(errorMiddleware)
 
 
 
