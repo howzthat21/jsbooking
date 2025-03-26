@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction} from "express" 
+import type { Request, Response, NextFunction} from "express" 
 import { prismaClient } from "../..";
 import argon2 from 'argon2';
 import { registerSchema } from "../../schema/authSchema" 
