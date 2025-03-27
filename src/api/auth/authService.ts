@@ -7,7 +7,7 @@ import  {
 } from './authModel'
 
 import { ErrorCodes } from "../../exceptions/errorhandling";
-import type { Response } from "express";
+import { response, type Response } from "express";
 import type { z } from "zod";
 
 
@@ -37,11 +37,13 @@ export class AuthService {
             
 
             if(!user || !user.password){
-                throw new BadRequestException('invalid login',ErrorCodes.INCORRECT_PASSWORD)
-
+                response.status(400)
+                return {
+                    message:'failed'
+                }
                 
             }
-            if(user){
+            
                 //testing
                 const passwordValidation = await argon2.verify(user.password, creds.password)
                 if(passwordValidation){
@@ -52,7 +54,7 @@ export class AuthService {
                 }
                 
 
-            }
+            
         
     }
     public async update(
@@ -120,11 +122,14 @@ export class AuthService {
         })
 
         if(userExist){
+            response.status(400)
             return {
                 message: 'user already exists',
+                
             }
+            
         }
-        if(!userExist){
+        
             const hashedPassword = await argon2.hash(validatedCreds.password)
             const userRegister = await this.prisma.user.create({
                 data: {
@@ -148,7 +153,7 @@ export class AuthService {
         
     
 }
-}
+
 
 export const authService = new AuthService()
 

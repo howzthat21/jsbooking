@@ -63,16 +63,16 @@ export class AuthController{
             const serviceResponse = await authService.register(data)
 
 
-            if(serviceResponse){
-                res.json({
-                    message:'success'
-                })
-            }
             if(!serviceResponse){
                 res.json({
                     message:'failed'
                 })
             }
+            
+            res.status(201).json({
+                message: "user has been created"
+            })
+            
         }
 
     
