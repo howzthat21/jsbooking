@@ -1,6 +1,7 @@
 import type { Request, RequestHandler, Response } from "express";
-import { LoginSchema, RegisterSchema } from "./authModel";
+import { LoginSchema, RegisterSchema, UpdateSchema, DeleteSchema } from "./authModel";
 import { AuthService } from "./authService";
+//import { error } from "console";
 
 
 const authService = new AuthService();
@@ -16,9 +17,63 @@ export class AuthController{
 
     }
     //authentication not added yet
-    public auth: RequestHandler = async(req:Request,res:Response)=>{
+        public auth: RequestHandler = async(req:Request,res:Response)=>{
         
     }
+
+        public update: RequestHandler = async(req:Request, res:Response)=>{
+            const data = UpdateSchema.parse(req.body)
+            const serviceResponse = await authService.delete(data)
+
+            if(serviceResponse){
+
+                res.json({
+                    message:"handled",
+                    serviceResponse
+                })
+            }
+            if(!serviceResponse){
+                res.json({
+                    message: 'failed',
+                    serviceResponse
+                })
+            }
+
+        }
+        public delete: RequestHandler = async (req:Request, res:Response)=>{
+            const data = DeleteSchema.parse(req.body)
+            const serviceResponse = await authService.delete(data)
+
+            if(serviceResponse){
+                res.json({
+                    message:'success',
+                    serviceResponse
+                })
+            }
+            if(!serviceResponse){
+                res.json({
+                    message:'failed',
+                    serviceResponse
+                })
+            }
+        }
+
+        public register:RequestHandler = async (req:Request, res:Response)=>{
+            const data = RegisterSchema.parse(req.body)
+            const serviceResponse = await authService.register(data)
+
+
+            if(serviceResponse){
+                res.json({
+                    message:'success'
+                })
+            }
+            if(!serviceResponse){
+                res.json({
+                    message:'failed'
+                })
+            }
+        }
 
     
 }

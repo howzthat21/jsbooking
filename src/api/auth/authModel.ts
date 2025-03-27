@@ -21,12 +21,24 @@ export const LoginSchema = z.object({
 export type LoginDTO = z.infer<typeof LoginSchema>
 
 export const UpdateSchema = z.object({
+    id:z.number(),
     email:z.string().email(),
     password:z.string().min(5),
-    name:z.string()
+    name:z.string(),
+    role:z.enum(['USER','ADMIN'])
 })
 
 export type UpdateDTO = z.infer<typeof UpdateSchema>
+
+
+export const DeleteSchema = z.object({
+    id:z.number(),
+
+
+
+})
+
+export type DeleteDTO = z.infer<typeof DeleteSchema>
 
 
 
