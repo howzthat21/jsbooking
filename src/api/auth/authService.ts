@@ -6,12 +6,13 @@ import { BadRequestException } from "../../exceptions/requesterror";
 
 
 
-import type {
-    LoginDTO
+import  {
+    LoginDTO, LoginSchema
 } from './authModel'
 
 import { ErrorCodes } from "../../exceptions/errorhandling";
 import type { Response } from "express";
+import type { z } from "zod";
 
 
 
@@ -24,13 +25,17 @@ export class AuthService {
     }
 
      async login(
-        creds: LoginDTO, res:Response
+        creds: z.infer<typeof LoginSchema>
 
     ){
 
+            const validatedCreds = LoginSchema.parse(creds)
             //was working fine until npx prisma generate
         
-            const user = await this.prisma.user.findUnique({where:{email:creds.email}})
+            const user = await this.prisma.user.findUnique({
+                where:{email: validatedCreds.email},
+                select: { id:true, email:true, password:true}
+            })
             
 
             if(!user || !user.password){
@@ -42,13 +47,12 @@ export class AuthService {
                 //testing
                 const passwordValidation = true;
                 if(passwordValidation){
-                    res.status(200).json({
-                        message:"login success"
-                    })
+                    return{
+                        message:'login sucess',
+                        user: {id:user.id, email: user.email}
+                    }
                 }
-                else{
-                    throw new BadRequestException('password dont match', ErrorCodes.INCORRECT_PASSWORD)
-                }
+                
 
             }
         

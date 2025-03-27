@@ -8,7 +8,7 @@ const authService = new AuthService();
 export class AuthController{
         public login:RequestHandler = async (req:Request, res:Response)=>{
         const data = LoginSchema.parse(req.body)
-        const serviceResponse = await authService.login(data,res.status(101))
+        const serviceResponse = await authService.login(data)
         res.json({
             message:"process",
             serviceResponse
