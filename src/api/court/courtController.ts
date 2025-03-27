@@ -10,13 +10,20 @@ export class CourtController {
     public create:RequestHandler = async(req:Request, res:Response)=>{
         const data = CourtSchema.parse(req.body)
         const serviceResponse = await courtService.createCourt(data)
-        if(serviceResponse){
+        if(!serviceResponse){
             res.json({
                 message:"created",
                 serviceResponse
             })
+          
             
         }
 
+        res.status(202).json({
+
+        })
+
     }
 }
+
+export const courtController = new CourtController

@@ -1,7 +1,7 @@
 import { Prisma, PrismaClient, } from "@prisma/client";
 
 import { CourtSchema, type CourtDTO } from "./courtModel";
-import { response, Request } from "express";
+import { response, } from "express";
 
 export class CourtService {
     private prisma: PrismaClient
@@ -13,7 +13,7 @@ export class CourtService {
     async createCourt(
         creds: CourtDTO
     ){
-        try{
+        
         const validatedCreds = CourtSchema.parse(creds)
 
         const courtExist = await this.prisma.court.findUnique({where:{
@@ -33,16 +33,13 @@ export class CourtService {
                         message:"booking success"
                     })
 
-                    
+                    return {
+                        message:"something"
+                    }
 
                 }
             }
-        }catch(ex){
-            response.status(400)
-            throw new Error('something went wront',)
-
-
-        }
+        
 
 
     }
