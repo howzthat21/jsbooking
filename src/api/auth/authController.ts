@@ -5,10 +5,10 @@ import { AuthService } from "./authService";
 
 const authService = new AuthService();
 
-class AuthController{
-    public login:RequestHandler = async (req:Request, res:Response)=>{
+export class AuthController{
+        public login:RequestHandler = async (req:Request, res:Response)=>{
         const data = LoginSchema.parse(req.body)
-        const serviceResponse = await authService.login(data)
+        const serviceResponse = await authService.login(data,res.status(101))
         res.json({
             message:"process",
             serviceResponse
