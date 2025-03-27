@@ -23,39 +23,37 @@ export class AuthController{
 
         public update: RequestHandler = async(req:Request, res:Response)=>{
             const data = UpdateSchema.parse(req.body)
-            const serviceResponse = await authService.delete(data)
+            const serviceResponse = await authService.update(data)
 
-            if(serviceResponse){
+            if(!serviceResponse){
 
                 res.json({
                     message:"handled",
                     serviceResponse
                 })
             }
-            if(!serviceResponse){
-                res.json({
-                    message: 'failed',
-                    serviceResponse
-                })
-            }
+            res.status(202).json({
+                message: "user updated"
+            })
+
+            
 
         }
         public delete: RequestHandler = async (req:Request, res:Response)=>{
             const data = DeleteSchema.parse(req.body)
             const serviceResponse = await authService.delete(data)
 
-            if(serviceResponse){
-                res.json({
-                    message:'success',
-                    serviceResponse
-                })
-            }
+            
             if(!serviceResponse){
                 res.json({
                     message:'failed',
                     serviceResponse
                 })
             }
+
+            res.status(201).json({
+                message:"user deleted"
+            })
         }
 
         public register:RequestHandler = async (req:Request, res:Response)=>{
