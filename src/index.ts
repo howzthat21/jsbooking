@@ -1,9 +1,10 @@
-import express, {Express, Request, Response} from 'express'
+import express, {type Express, Request, Response} from 'express'
 import { PORT } from './secrets'
-import rootRouter from './routes'
+
 import { PrismaClient } from '@prisma/client';
 import { registerSchema } from './schema/authSchema';
 import { errorMiddleware } from './middlewares/advanceError';
+import authRoutes from './api/auth/authRouter';
 
 
 
@@ -19,7 +20,7 @@ const app:Express = express();
 
 
 app.use(express.json())
-app.use('/', rootRouter)
+app.use('/api', authRoutes)
 app.use(errorMiddleware)
 
 
