@@ -16,9 +16,7 @@ import type { Response } from "express";
 
 
 export class AuthService {
-    static login(data: { email: string; password: string; }) {
-        throw new Error("Method not implemented.");
-    }
+    
     private prisma: PrismaClient
 
     constructor(){
@@ -30,7 +28,7 @@ export class AuthService {
 
     ){
 
-            
+            //was working fine until npx prisma generate
         
             const user = await this.prisma.user.findUnique({where:{email:creds.email}})
             
@@ -41,6 +39,7 @@ export class AuthService {
                 
             }
             if(user){
+                //testing
                 const passwordValidation = true;
                 if(passwordValidation){
                     res.status(200).json({
