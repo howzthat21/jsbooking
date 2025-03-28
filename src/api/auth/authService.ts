@@ -2,13 +2,26 @@ import { Prisma, PrismaClient,type User } from "@prisma/client";
 import argon2 from 'argon2'
 import { BadRequestException } from "../../exceptions/requesterror";
 import  {
-    type LoginDTO, type UpdateDTO, type DeleteDTO, type RegisterDTO, LoginSchema, UpdateSchema,
-    DeleteSchema, RegisterSchema
+    type LoginDTO, type UpdateDTO, type DeleteDTO, type RegisterDTO, type UserDTO, LoginSchema, UpdateSchema,
+    DeleteSchema, RegisterSchema,
+    UserSchema
 } from './authModel'
 
 import { ErrorCodes } from "../../exceptions/errorhandling";
 import { response, type Response } from "express";
 import type { z } from "zod";
+import jwt from 'jsonwebtoken'
+
+
+import dotenv from 'dotenv'
+import { jwtDecode } from "jwt-decode";
+import test from "node:test";
+
+
+
+export const testSecret:string = 'ohadajbcjsabc'
+
+
 
 
 
@@ -47,9 +60,11 @@ export class AuthService {
                 //testing
                 const passwordValidation = await argon2.verify(user.password, creds.password)
                 if(passwordValidation){
+                    const token = jwt.sign({email:validatedCreds.email}, testSecret)
                     return{
                         message:'login sucess',
-                        user: {id:user.id, email: user.email}
+                        user: {id:user.id, email: user.email},
+                        data: { token}
                     }
                 }
                 
@@ -142,6 +157,29 @@ export class AuthService {
                 return {
                     message: 'user has been registered'
                 }
+            }
+        }
+
+        public async getUserProfile(
+            creds:UserDTO
+        ){
+            const validatedCreds = UserSchema.parse(creds)
+            const CheckUserProfile = await this.prisma.user.findUnique({
+                where:{email:validatedCreds.email},
+                select:{email:true, role:true}
+            })
+            if(CheckUserProfile){
+                return{
+                    user:{email:CheckUserProfile.email, role: CheckUserProfile.role}
+                }
+
+                
+
+            }
+
+
+            return{
+                message:"status"
             }
         }
 

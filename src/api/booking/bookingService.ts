@@ -25,10 +25,17 @@ export class BookingService {
 
 
         }
+        
+        return {
+            message:"something"
+        }
 
 
     }
+    
 
 
 
 }
+
+export const bookingService = new BookingService()

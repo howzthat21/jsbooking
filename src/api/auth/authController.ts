@@ -18,6 +18,7 @@ export class AuthController{
     }
     //authentication not added yet
         public auth: RequestHandler = async(req:Request,res:Response)=>{
+
         
     }
 
@@ -71,6 +72,10 @@ export class AuthController{
                 message: "user has been created"
             })
             
+        }
+        public getUserProfile: RequestHandler = async(req:Request,res:Response)=>{
+            const data = LoginSchema.parse(req.body)
+            const serviceResponse = await authService.getUserProfile(data)
         }
 
     

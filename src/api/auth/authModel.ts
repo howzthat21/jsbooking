@@ -15,6 +15,7 @@ export type RegisterDTO = z.infer<typeof RegisterSchema>
 export const LoginSchema = z.object({
     email:z.string().email(),
     password:z.string().min(5)
+    
 })
 
 
@@ -38,7 +39,14 @@ export const DeleteSchema = z.object({
 
 })
 
+export const UserSchema = z.object({
+    email:z.string()
+
+})
+
 export type DeleteDTO = z.infer<typeof DeleteSchema>
+
+export type UserDTO = z.infer<typeof UserSchema>
 
 
 
